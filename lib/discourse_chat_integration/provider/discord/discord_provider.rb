@@ -46,7 +46,7 @@ module DiscourseChatIntegration
         end
 
         message = {
-          content: SiteSetting.chat_integration_discord_message_content,
+          content: post.user.custom_fields.chat_integration_discord_message_content,
           embeds: [{
             title: "#{topic.title} #{(category == '[uncategorized]') ? '' : category} #{topic.tags.present? ? topic.tags.map(&:name).join(', ') : ''}",
             color: topic.category ? topic.category.color.to_i(16) : nil,

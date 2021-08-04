@@ -13,11 +13,17 @@ register_asset "stylesheets/chat-integration-admin.scss"
 register_svg_icon "rocket" if respond_to?(:register_svg_icon)
 register_svg_icon "fa-arrow-circle-o-right" if respond_to?(:register_svg_icon)
 
+DiscoursePluginRegistry.serialized_current_user_fields << 'chat_integration_discord_message_content'
+
 # Site setting validators must be loaded before initialize
 require_relative "lib/discourse_chat_integration/provider/slack/slack_enabled_setting_validator"
 
 after_initialize do
   require_relative "app/initializers/discourse_chat_integration"
+
+  User.register_custom_field_type('chat_integration_discord_message_content', :text)
+
+  register_editable_user_custom_field :chat_integration_discord_message_content
 
   on(:post_created) do |post|
     # This will run for every post, even PMs. Don't worry, they're filtered out later.

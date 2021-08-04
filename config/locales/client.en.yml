@@ -112,8 +112,6 @@ en:
             webhook_url:
               title: Webhook URL
               help: The webhook URL created in your Discord server settings
-            message_content:
-              title: "Webhook Message Content"
 
         #######################################
         ######### MATTERMOST STRINGS ##########

@@ -1,12 +1,8 @@
-{{#if siteSettings.chat_integration_enabled}}
-  {{#if siteSettings.chat_integration_discord_enabled}}
-    <div class="control-group">
-      <label class="control-label">{{i18n "chat_integration.provider.discord.param.message_content.title"}}</label>
-      <div class="controls">
-          <label class="text-label">
-            {{input type="text" class="input-xxlarge" value=model.custom_fields.chat_integration_discord_message_content}}
-          </label>
-      </div>
-    </div>
-  {{/if}}
-{{/if}}
+<div class="control-group">
+  <label class="control-label">Webhook Message Content</label>
+  <div class="controls">
+      <label class="text-label">
+        {{input type="text" class="input-xxlarge" value=model.custom_fields.chat_integration_discord_message_content}}
+      </label>
+  </div>
+</div>

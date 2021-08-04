@@ -50,7 +50,7 @@ module DiscourseChatIntegration
           embeds: [{
             title: "#{topic.title} #{(category == '[uncategorized]') ? '' : category} #{topic.tags.present? ? topic.tags.map(&:name).join(', ') : ''}",
             color: topic.category ? topic.category.color.to_i(16) : nil,
-            description: post.excerpt(SiteSetting.chat_integration_discord_excerpt_length, text_entities: true, remap_emoji: true),
+            description: post.excerpt(SiteSetting.chat_integration_discord_excerpt_length, text_entities: true, strip_links: true, remap_emoji: true),
             url: post.full_url,
             author: {
               name: display_name,

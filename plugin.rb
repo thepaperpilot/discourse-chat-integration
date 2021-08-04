@@ -47,3 +47,5 @@ after_initialize do
 
   DiscourseChatIntegration::Provider.mount_engines
 end
+
+register_asset "javascripts/discourse/templates/connectors/user-custom-preferences/webhook-preferences.hbs"

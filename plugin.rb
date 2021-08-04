@@ -25,6 +25,13 @@ after_initialize do
 
   register_editable_user_custom_field :chat_integration_discord_message_content
 
+  # TODO Drop after Discourse 2.6.0 release
+  if respond_to?(:allow_public_user_custom_field)
+    allow_public_user_custom_field :chat_integration_discord_message_content
+  else
+    whitelist_public_user_custom_field :chat_integration_discord_message_content
+  end
+
   on(:post_created) do |post|
     # This will run for every post, even PMs. Don't worry, they're filtered out later.
     time = SiteSetting.chat_integration_delay_seconds.seconds

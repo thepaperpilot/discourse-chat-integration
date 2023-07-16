@@ -33,10 +33,12 @@ fa_IR:
       type:
         normal: معمولی
         group_message: پیغام گروه
+        group_mention: اشاره گروهی
       filter:
         mute: 'بی صدا'
         follow: 'فقط اولین نوشته'
         watch: 'همه نوشته‌ها و پاسخ‌ها'
+        tag_added: 'برچسب به موضوع اضافه شد'
       rule_table:
         filter: "فیلتر"
         category: "دسته‌بندی"
@@ -78,10 +80,22 @@ fa_IR:
           param:
             name:
               title: "نام"
+            webhook_url:
+              title: نشانی اینترنتی وب‌هوک
+        guilded:
+          title: "Guilded"
+          param:
+            name:
+              title: "نام"
+              help: "نامی برای توصیف کانال. برای اتصال به Guilded استفاده نمی‌شود"
+            webhook_url:
+              title: نشانی اینترنتی وب‌هوک
+              help: نشانی اینترنتی وب‌هوک که در سرور Guilded شما ایجاد شده
         mattermost:
           param:
             identifier:
               title: کانال
+              help: "به عنوان مثال #channel، @username."
         matrix:
           param:
             name:
@@ -94,19 +108,39 @@ fa_IR:
           param:
             identifier:
               title: کانال
+              help: "به عنوان مثال #channel، @username."
         gitter:
           param:
             name:
               title: "نام"
+            webhook_url:
+              title: "نشانی اینترنتی وب‌هوک"
         teams:
           param:
             name:
               title: "نام"
+            webhook_url:
+              title: "نشانی اینترنتی وب‌هوک"
         webex:
           param:
             name:
               title: "نام"
+            webhook_url:
+              title: "نشانی اینترنتی وب‌هوک"
         google:
           param:
             name:
               title: "نام"
+            webhook_url:
+              title: "نشانی اینترنتی وب‌هوک"
+    discourse_automation:
+      scriptables:
+        send_slack_message:
+          title: ارسال پیام اسلک
+          fields:
+            message:
+              label: پیام
+            url:
+              label: نشانی اینترنتی
+            channel:
+              label: کانال

@@ -13,30 +13,31 @@ module DiscourseChatIntegration::Provider::TelegramProvider
                        only: :command
 
     def command
-
       # If it's a new message (telegram also sends hooks for other reasons that we don't care about)
-      if params.key?('message')
-        chat_id = params['message']['chat']['id']
+      if params.key?("message")
+        chat_id = params["message"]["chat"]["id"]
 
-        message_text = process_command(params['message'])
+        message_text = process_command(params["message"])
 
-        message = {
-          chat_id: chat_id,
-          text: message_text,
-          parse_mode: "html",
-          disable_web_page_preview: true,
-        }
+        if message_text.present?
+          message = {
+            chat_id: chat_id,
+            text: message_text,
+            parse_mode: "html",
+            disable_web_page_preview: true,
+          }
 
-        DiscourseChatIntegration::Provider::TelegramProvider.sendMessage(message)
+          DiscourseChatIntegration::Provider::TelegramProvider.sendMessage(message)
+        end
+      elsif params.dig("channel_post", "text")&.include?("/getchatid")
+        chat_id = params["channel_post"]["chat"]["id"]
 
-      elsif params.dig('channel_post', 'text')&.include?('/getchatid')
-        chat_id = params['channel_post']['chat']['id']
-
-        message_text = I18n.t(
-          "chat_integration.provider.telegram.unknown_chat",
-          site_title: CGI::escapeHTML(SiteSetting.title),
-          chat_id: chat_id,
-        )
+        message_text =
+          I18n.t(
+            "chat_integration.provider.telegram.unknown_chat",
+            site_title: CGI.escapeHTML(SiteSetting.title),
+            chat_id: chat_id,
+          )
 
         message = {
           chat_id: chat_id,
@@ -49,36 +50,49 @@ module DiscourseChatIntegration::Provider::TelegramProvider
       end
 
       # Always give telegram a success message, otherwise we'll stop receiving webhooks
-      data = {
-        success: true
-      }
+      data = { success: true }
       render json: data
     end
 
     def process_command(message)
-      chat_id = params['message']['chat']['id']
+      return unless message["text"] # No command to be processed
+
+      chat_id = params["message"]["chat"]["id"]
 
       provider = DiscourseChatIntegration::Provider::TelegramProvider::PROVIDER_NAME
 
-      channel = DiscourseChatIntegration::Channel.with_provider(provider).with_data_value('chat_id', chat_id).first
+      channel =
+        DiscourseChatIntegration::Channel
+          .with_provider(provider)
+          .with_data_value("chat_id", chat_id)
+          .first
 
-      text_key = "unknown_chat" if channel.nil?
-      # If slash commands disabled, send a generic message
-      text_key = "known_chat" if !SiteSetting.chat_integration_telegram_enable_slash_commands
-      text_key = "help" if message['text'].blank?
+      text_key =
+        if channel.nil?
+          "unknown_chat"
+        elsif !SiteSetting.chat_integration_telegram_enable_slash_commands ||
+              !message["text"].start_with?("/")
+          "silent"
+        else
+          ""
+        end
+
+      return "" if text_key == "silent"
 
       if text_key.present?
-        return  I18n.t(
-          "chat_integration.provider.telegram.#{text_key}",
-          site_title: CGI::escapeHTML(SiteSetting.title),
-          chat_id: chat_id,
+        return(
+          I18n.t(
+            "chat_integration.provider.telegram.#{text_key}",
+            site_title: CGI.escapeHTML(SiteSetting.title),
+            chat_id: chat_id,
+          )
         )
       end
 
-      tokens = message['text'].split(" ")
+      tokens = message["text"].split(" ")
 
-      tokens[0][0] = '' # Remove the slash from the first token
-      tokens[0] = tokens[0].split('@')[0] # Remove the bot name from the command (necessary for group chats)
+      tokens[0][0] = "" # Remove the slash from the first token
+      tokens[0] = tokens[0].split("@")[0] # Remove the bot name from the command (necessary for group chats)
 
       ::DiscourseChatIntegration::Helper.process_command(channel, tokens)
     end
@@ -87,8 +101,7 @@ module DiscourseChatIntegration::Provider::TelegramProvider
       params.require(:token)
 
       if SiteSetting.chat_integration_telegram_secret.blank? ||
-         SiteSetting.chat_integration_telegram_secret != params[:token]
-
+           SiteSetting.chat_integration_telegram_secret != params[:token]
         raise Discourse::InvalidAccess.new
       end
     end
@@ -99,7 +112,5 @@ module DiscourseChatIntegration::Provider::TelegramProvider
     isolate_namespace DiscourseChatIntegration::Provider::TelegramProvider
   end
 
-  TelegramEngine.routes.draw do
-    post "command/:token" => "telegram_command#command"
-  end
+  TelegramEngine.routes.draw { post "command/:token" => "telegram_command#command" }
 end

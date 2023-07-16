@@ -47,6 +47,17 @@
       overflow: auto;
     }
   }
+
+  .admin-controls {
+    padding: 10px;
+    .nav-pills {
+      padding: 0;
+    }
+  }
+}
+
+.admin-controls-chat-providers {
+  margin-right: auto;
 }
 
 #chat-integration-edit-channel-modal,
@@ -54,6 +65,10 @@
 #chat-integration-edit-rule_modal {
   table {
     width: 100%;
+
+    tbody {
+      border-top: none;
+    }
 
     tr {
       border: none;
@@ -74,6 +89,8 @@
 
     tr.chat-instructions label {
       color: var(--primary-medium);
+      font-size: var(--font-down-1);
+      margin-top: 0.5rem;
     }
   }
 

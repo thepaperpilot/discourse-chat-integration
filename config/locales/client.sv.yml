@@ -105,6 +105,12 @@ sv:
             webhook_url:
               title: Webhook-URL
               help: Webhook-URL som skapats i dina Discord-serverinställningar
+        guilded:
+          param:
+            name:
+              title: "Namn"
+            webhook_url:
+              title: Webhook-URL
         mattermost:
           title: "Mattermost"
           param:
@@ -199,3 +205,14 @@ sv:
             webhook_url:
               title: "Webhook-URL"
               help: "URL som tillhandahålls när du skapar en ny inkommande webhook"
+    discourse_automation:
+      scriptables:
+        send_slack_message:
+          title: Skicka Slack-meddelande
+          fields:
+            message:
+              label: Meddelande
+            url:
+              label: URL
+            channel:
+              label: Kanal

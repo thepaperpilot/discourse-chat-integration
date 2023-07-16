@@ -1,15 +1,16 @@
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import DiscourseRoute from "discourse/routes/discourse";
+import { next } from "@ember/runloop";
 
-export default DiscourseRoute.extend({
+export default class Trascript extends DiscourseRoute {
   model(params) {
     if (this.currentUser) {
       const secret = params.secret;
 
       this.replaceWith("discovery.latest").then((e) => {
         if (this.controllerFor("navigation/default").get("canCreateTopic")) {
-          Ember.run.next(() => {
+          next(() => {
             ajax(`chat-transcript/${secret}`).then((result) => {
               e.send(
                 "createNewTopicViaParams",
@@ -27,5 +28,5 @@ export default DiscourseRoute.extend({
       this.session.set("shouldRedirectToUrl", window.location.href);
       this.replaceWith("login");
     }
-  },
-});
+  }
+}

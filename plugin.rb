@@ -118,5 +118,3 @@ after_initialize do
     end
   end
 end
-
-register_asset "javascripts/discourse/templates/connectors/user-custom-preferences/webhook-preferences.hbs"
